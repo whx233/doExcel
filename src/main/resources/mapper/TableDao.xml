@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myexcel.doExcel.dao.TableDao">
+    <!-- 用户信息 -->
+    <select id="getTableList" resultType="com.myexcel.doExcel.util.HashDto" parameterType="com.myexcel.doExcel.util.HashDto">
+        SELECT
+        a.table_schema,
+        a.table_name,
+        a.table_comment
+        FROM
+        information_schema.TABLES a
+        WHERE
+        a.table_type = 'BASE TABLE'
+        <if test="param != null and param.table_schema != null">
+            AND a.table_schema = #{param.table_schema}
+        </if>
+        <if test="param != null and param.table_name != null">
+            AND a.table_name like #{param.table_name}"%"
+        </if>
+        ORDER BY table_name
+    </select>
+
+
+    <select id="getColumn" resultType="com.myexcel.doExcel.util.HashDto" parameterType="com.myexcel.doExcel.util.HashDto">
+        SELECT
+            b.table_schema,
+            b.table_name,
+            b.column_name,
+            b.column_type,
+            b.column_comment
+        FROM
+            information_schema.COLUMNS b
+        WHERE
+            b.table_schema = #{param.table_schema}
+            AND b.table_name = #{param.table_name}
+        ORDER BY
+            b.table_schema,
+            b.table_name,
+            b.ordinal_position
+    </select>
+
+</mapper>
